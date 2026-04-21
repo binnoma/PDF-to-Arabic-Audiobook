@@ -3,6 +3,7 @@
 مشروع احترافي لتحويل ملفات PDF العربية إلى كتب صوتية عالية الجودة باستخدام تقنيات الذكاء الاصطناعي ونظام استنساخ الأصوات (Voice Cloning).
 
 ---
+[url=https://ibb.co/MxwSwrFH][img]https://i.ibb.co/tTjKjgV6/arabic-audiobook-hero-1776764611669.jpg[/img][/url]
 
 ## 🚀 المميزات الرئيسية (Key Features)
 
