@@ -17,11 +17,26 @@ os.environ["COQUI_TOS_AGREED"] = "1"
 # Avoid some transformers import issues
 os.environ["TRANSFORMERS_NO_ADVISORY_WARNINGS"] = "1"
 
+# --- Set Local Paths for everything ---
+# Store AI models inside the project instead of System AppData
+os.environ["TTS_HOME"] = os.path.abspath("models")
+os.environ["XDG_DATA_HOME"] = os.path.abspath("models")
+
 # Download NLTK data for sentence tokenization
 nltk.download('punkt')
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
+
+# Local folders for uploads and models
+LOCAL_TEMP_DIR = os.path.abspath("temp_files")
+MODELS_DIR = os.path.abspath("models")
+OUTPUTS_DIR = os.path.abspath("outputs")
+
+for folder in [LOCAL_TEMP_DIR, MODELS_DIR, OUTPUTS_DIR]:
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+
+app.config['UPLOAD_FOLDER'] = LOCAL_TEMP_DIR
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50 MB max upload
 
 # Configure pydub to use the local ffmpeg
@@ -59,10 +74,6 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {device}")
 
 VOICES_DIR = os.path.join('static', 'voices')
-OUTPUTS_DIR = os.path.join('outputs')
-
-if not os.path.exists(OUTPUTS_DIR):
-    os.makedirs(OUTPUTS_DIR)
 
 def get_available_voices():
     voices = []

@@ -14,6 +14,8 @@ ENV/
 # Audio Outputs & Temp files
 outputs/*.mp3
 outputs/*.wav
+temp_files/
+models/
 ffmpeg_temp/
 temp_pdf_*.pdf
 
