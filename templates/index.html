@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="حوّل ملفات PDF العربية إلى كتب صوتية عالية الجودة باستخدام الذكاء الاصطناعي. تجربة استماع طبيعية وسهلة.">
+    <meta name="keywords" content="تحويل PDF إلى صوت, كتاب صوتي عربي, ذكاء اصطناعي, TTS عربي, XTTS">
+    <title>صانع الكتب الصوتية العربية الذكي | Arabic Audiobook AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <div class="background-canvas"></div>
+    <div class="blob-container">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-headphones-alt"></i> صانع الكتب الصوتية</h1>
+            <p>حوّل كتبك ومستنداتك إلى تجربة صوتية ساحرة بنقرة واحدة.</p>
+        </header>
+
+        <main>
+            <!-- Step 1: Upload PDF -->
+            <div class="card" id="step-1">
+                <div class="card-header">
+                    <span class="step-badge">1</span>
+                    <h2>ارفع ملف الكتاب (PDF)</h2>
+                </div>
+                <div class="card-body">
+                    <div class="upload-area" id="pdf-upload-area">
+                        <i class="fas fa-file-pdf"></i>
+                        <p>اضغط هنا أو اسحب ملف PDF</p>
+                        <input type="file" id="pdf-file" accept=".pdf" hidden>
+                    </div>
+                    <div id="pdf-file-info" class="file-info hidden"></div>
+                    <button class="btn btn-primary mt-2" id="extract-btn" disabled>
+                        <i class="fas fa-cogs"></i> استخراج النص
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading overlay for extraction -->
+            <div id="loading-overlay" class="hidden">
+                <div class="spinner"></div>
+                <p>جاري استخراج النص...</p>
+            </div>
+
+            <!-- Step 2: Review Text and Upload Reference Voice -->
+            <div class="card hidden" id="step-2">
+                <div class="card-header">
+                    <span class="step-badge">2</span>
+                    <h2>مراجعة النص والتحويل</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="extracted-text"><i class="fas fa-align-right"></i> النص المستخرج (يمكنك تعديله)</label>
+                        <textarea id="extracted-text" rows="10"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-microphone"></i> اختر نبرة الصوت</label>
+                        <div id="voices-container" class="voices-grid">
+                            <!-- Voices will be loaded here -->
+                            <div class="voice-card skeleton"></div>
+                            <div class="voice-card skeleton"></div>
+                        </div>
+                        
+                        <div id="custom-voice-section" class="mt-1">
+                            <label class="sub-label"><i class="fas fa-plus-circle"></i> أو ارفع ملف صوتي خاص بك (اختياري)</label>
+                            <div class="upload-area small" id="ref-upload-area">
+                                <i class="fas fa-file-audio"></i>
+                                <p>ارفع ملف صوتي (WAV/MP3)</p>
+                                <input type="file" id="ref-file" accept="audio/*" hidden>
+                            </div>
+                            <div id="ref-file-info" class="file-info hidden"></div>
+                        </div>
+                    </div>
+
+                    <div class="settings-grid mt-1">
+                        <div class="form-group">
+                            <label><i class="fas fa-tachometer-alt"></i> سرعة القراءة</label>
+                            <select id="reading-speed" class="form-select">
+                                <option value="0.8">0.8x (بطيء)</option>
+                                <option value="1.0" selected>1.0x (طبيعي)</option>
+                                <option value="1.2">1.2x (سريع)</option>
+                                <option value="1.5">1.5x (سريع جداً)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="button-group mt-2">
+                        <button class="btn btn-secondary" id="preview-btn" disabled>
+                            <i class="fas fa-play-circle"></i> معاينة عينة (30 ثانية)
+                        </button>
+                        <button class="btn btn-success" id="convert-btn" disabled>
+                            <i class="fas fa-magic"></i> ابدأ التحويل الكامل
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Progress & Result -->
+            <div class="card hidden" id="step-3">
+                <div class="card-header">
+                    <span class="step-badge">3</span>
+                    <h2>جاري المعالجة</h2>
+                </div>
+                <div class="card-body center-text">
+                    <div id="progress-container">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-bar"></div>
+                        </div>
+                        <p id="progress-text">0% - بدأ التحضير...</p>
+                    </div>
+                    
+                    <div id="result-container" class="hidden">
+                        <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                        <h3>اكتمل التحويل بنجاح!</h3>
+                        <a href="#" id="download-btn" class="btn btn-primary mt-2">
+                            <i class="fas fa-download"></i> تحميل الكتاب الصوتي
+                        </a>
+                    </div>
+
+                    <div id="error-container" class="hidden">
+                        <div class="error-icon"><i class="fas fa-times-circle"></i></div>
+                        <h3 id="error-msg">حدث خطأ</h3>
+                        <button class="btn btn-secondary mt-2" onclick="location.reload()">حاول مرة أخرى</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    <footer>
+        <div class="disclaimer">
+            <p><i class="fas fa-exclamation-triangle"></i> <strong>تنبيه أخلاقي:</strong> هذا المشروع مخصص للاستخدام الشخصي والتعليمي. يرجى احترام حقوق الملكية الفكرية والخصوصية عند استخدام تقنية استنساخ الأصوات.</p>
+        </div>
+        <p>صنع بحب من الإمارات 🇦🇪</p>
+        <p>المطور <a href="#" style="color: var(--primary); text-decoration: none; font-weight: bold;">@Binnoma</a></p>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

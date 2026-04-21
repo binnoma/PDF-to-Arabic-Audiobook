@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+
+# Environment variables
+.env
+.flaskenv
+
+# Audio Outputs & Temp files
+outputs/*.mp3
+outputs/*.wav
+ffmpeg_temp/
+temp_pdf_*.pdf
+
+# Logs
+error_log.txt
+task_errors.log
+*.log
+
+# Large Binaries (FFmpeg)
+# Users should download these themselves or use the provided instructions
+ffmpeg.exe
+ffplay.exe
+ffprobe.exe
+*.dll
+
+# IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project specific
+static/voices/*
+!static/voices/instruction.txt
+!static/voices/Default_Voice.wav
